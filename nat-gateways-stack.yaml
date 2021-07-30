@@ -1,0 +1,75 @@
+AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  infraStackName:
+    Description: "Name of your Infra CFN Stack"
+    Type: String
+Resources:
+  natGatewayEIP1:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: "vpc"
+      Tags:
+        - Key: "Name"
+          Value: "NAT Gateway1 EIP"
+  natGateway1:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId: !GetAtt natGatewayEIP1.AllocationId
+      ConnectivityType: "public"
+      SubnetId:
+        Fn::ImportValue: !Sub ${infraStackName}-publicSubnet1ID
+      Tags:
+        - Key: "Name"
+          Value: "cloudideastar-master-public-natgateway1"
+  # natGateway2
+  natGatewayEIP2:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: "vpc"
+      Tags:
+        - Key: "Name"
+          Value: "NAT Gateway2 EIP"
+  natGateway2:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId: !GetAtt natGatewayEIP2.AllocationId
+      ConnectivityType: "public"
+      SubnetId:
+        Fn::ImportValue: !Sub ${infraStackName}-publicSubnet2ID
+      Tags:
+        - Key: "Name"
+          Value: "cloudideastar-master-public-natgateway2"
+  # natGateway3
+  natGatewayEIP3:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: "vpc"
+      Tags:
+        - Key: "Name"
+          Value: "NAT Gateway3 EIP"
+  natGateway3:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId: !GetAtt natGatewayEIP3.AllocationId
+      ConnectivityType: "public"
+      SubnetId:
+        Fn::ImportValue: !Sub ${infraStackName}-publicSubnet3ID
+      Tags:
+        - Key: "Name"
+          Value: "cloudideastar-master-public-natgateway3"
+Outputs:
+  NATGW1ID: #logicalID
+    Description: "cloudideastar Master NATGW1 ID"
+    Value: !Ref natGateway1 # the vaule of export is here
+    Export:
+      Name: !Sub ${AWS::StackName}-NATGW1ID # the name of infra-stack export
+  NATGW2ID: #logicalID
+    Description: "cloudideastar Master NATGW2 ID"
+    Value: !Ref natGateway2 # the vaule of export is here
+    Export:
+      Name: !Sub ${AWS::StackName}-NATGW2ID # the name of infra-stack export
+  NATGW3ID: #logicalID
+    Description: "cloudideastar Master NATGW3 ID"
+    Value: !Ref natGateway3 # the vaule of export is here
+    Export:
+      Name: !Sub ${AWS::StackName}-NATGW3ID # the name of infra-stack export

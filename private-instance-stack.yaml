@@ -1,0 +1,63 @@
+AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  securityGroupStackName: #ParameterKey
+    Description: "Name of your Security Group CFN Stack"
+    Type: String
+    Default: "security-stack"
+  privateSubnetStackName: #ParameterKey
+    Description: "Name of your Private Subnet CFN Stack"
+    Type: String
+    Default: "private-subnets-stack"
+Resources:
+  privateInstance1:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-0d058fe428540cd89 #ubuntu 20.04 LTS
+      InstanceType: t2.micro
+      SubnetId:
+        Fn::ImportValue: !Sub ${privateSubnetStackName}-privateSubnet1ID
+      KeyName: cloudideastar-master
+      Tags:
+        - Key: "Name"
+          Value: "private-instance-1"
+      SecurityGroupIds:
+        - !ImportValue
+          Fn::Sub: ${securityGroupStackName}-SecurityGroupID
+  privateInstance2:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-0d058fe428540cd89 #ubuntu 20.04 LTS
+      InstanceType: t2.micro
+      SubnetId:
+        Fn::ImportValue: !Sub ${privateSubnetStackName}-privateSubnet2ID
+      KeyName: cloudideastar-master
+      Tags:
+        - Key: "Name"
+          Value: "private-instance-2"
+      SecurityGroupIds:
+        - !ImportValue
+          Fn::Sub: ${securityGroupStackName}-SecurityGroupID
+  privateInstance3:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-0d058fe428540cd89 #ubuntu 20.04 LTS
+      InstanceType: t2.micro
+      SubnetId:
+        Fn::ImportValue: !Sub ${privateSubnetStackName}-privateSubnet3ID
+      KeyName: cloudideastar-master
+      Tags:
+        - Key: "Name"
+          Value: "private-instance-3"
+      SecurityGroupIds:
+        - !ImportValue
+          Fn::Sub: ${securityGroupStackName}-SecurityGroupID
+Outputs:
+  privateInstance1DNS:
+    Description: DNS Name of Private Instance1
+    Value: !GetAtt privateInstance1.PrivateDnsName
+  privateInstance2DNS:
+    Description: DNS Name of Private Instance2
+    Value: !GetAtt privateInstance2.PrivateDnsName
+  privateInstance3DNS:
+    Description: DNS Name of Private Instance3
+    Value: !GetAtt privateInstance3.PrivateDnsName

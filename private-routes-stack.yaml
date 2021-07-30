@@ -1,0 +1,56 @@
+AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  NATGWStackName:
+    Description: "Name of your NAT Gateway CFN Stack"
+    Type: String
+  privateSubnetStackName:
+    Description: "Name of your Private Subnet CFN Stack"
+    Type: String
+Resources:
+  privateSubnet1RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId:
+        Fn::ImportValue: !Sub ${privateSubnetStackName}-privateSubnet1ID
+      RouteTableId:
+        Fn::ImportValue: !Sub ${privateSubnetStackName}-privateSubnet1-routeTableID
+  # Associate privateSubnet2 to RouteTable
+  privateSubnet2RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId:
+        Fn::ImportValue: !Sub ${privateSubnetStackName}-privateSubnet2ID
+      RouteTableId:
+        Fn::ImportValue: !Sub ${privateSubnetStackName}-privateSubnet2-routeTableID
+  # Associate privateSubnet3 to RouteTable
+  privateSubnet3RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId:
+        Fn::ImportValue: !Sub ${privateSubnetStackName}-privateSubnet3ID
+      RouteTableId:
+        Fn::ImportValue: !Sub ${privateSubnetStackName}-privateSubnet3-routeTableID
+  defaultRouteToNATGW1:
+    Type: AWS::EC2::Route
+    Properties:
+      DestinationCidrBlock: "0.0.0.0/0"
+      NatGatewayId:
+        Fn::ImportValue: !Sub ${NATGWStackName}-NATGW1ID
+      RouteTableId:
+        Fn::ImportValue: !Sub ${privateSubnetStackName}-privateSubnet1-routeTableID
+  defaultRouteToNATGW2:
+    Type: AWS::EC2::Route
+    Properties:
+      DestinationCidrBlock: "0.0.0.0/0"
+      NatGatewayId:
+        Fn::ImportValue: !Sub ${NATGWStackName}-NATGW2ID
+      RouteTableId:
+        Fn::ImportValue: !Sub ${privateSubnetStackName}-privateSubnet2-routeTableID
+  defaultRouteToNATGW3:
+    Type: AWS::EC2::Route
+    Properties:
+      DestinationCidrBlock: "0.0.0.0/0"
+      NatGatewayId:
+        Fn::ImportValue: !Sub ${NATGWStackName}-NATGW3ID
+      RouteTableId:
+        Fn::ImportValue: !Sub ${privateSubnetStackName}-privateSubnet3-routeTableID

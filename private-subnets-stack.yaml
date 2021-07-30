@@ -1,0 +1,94 @@
+AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  infraStackName:
+    Description: "Name of your Infra CFN Stack"
+    Type: String
+Resources:
+  privateSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: "ap-southeast-1a"
+      CidrBlock: "192.168.4.0/24"
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: "Name"
+          Value: "mastervpc1-private-subnet1"
+      VpcId:
+        Fn::ImportValue: !Sub ${infraStackName}-VPCID
+  privateSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: "ap-southeast-1b"
+      CidrBlock: "192.168.5.0/24"
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: "Name"
+          Value: "mastervpc1-private-subnet2"
+      VpcId:
+        Fn::ImportValue: !Sub ${infraStackName}-VPCID
+  privateSubnet3:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: "ap-southeast-1c"
+      CidrBlock: "192.168.6.0/24"
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: "Name"
+          Value: "mastervpc1-private-subnet3"
+      VpcId:
+        Fn::ImportValue: !Sub ${infraStackName}-VPCID
+  routeTableForprivateSubnet1:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      Tags:
+        - Key: "Name"
+          Value: "route-table-privateSubnet1"
+      VpcId:
+        Fn::ImportValue: !Sub ${infraStackName}-VPCID
+  routeTableForprivateSubnet2:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      Tags:
+        - Key: "Name"
+          Value: "route-table-privateSubnet2"
+      VpcId:
+        Fn::ImportValue: !Sub ${infraStackName}-VPCID
+  routeTableForprivateSubnet3:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      Tags:
+        - Key: "Name"
+          Value: "route-table-privateSubnet3"
+      VpcId:
+        Fn::ImportValue: !Sub ${infraStackName}-VPCID
+Outputs:
+  privateSubnet1ID: #logicalID
+    Description: "cloudideastar Master VPC privateSubnet1 ID"
+    Value: !Ref privateSubnet1 # the vaule of export is here
+    Export:
+      Name: !Sub ${AWS::StackName}-privateSubnet1ID # the name of infra-stack export
+  privateSubnet2ID: #logicalID
+    Description: "cloudideastar Master VPC privateSubnet2 ID"
+    Value: !Ref privateSubnet2 # the vaule of export is here
+    Export:
+      Name: !Sub ${AWS::StackName}-privateSubnet2ID # the name of infra-stack export
+  privateSubnet3ID: #logicalID
+    Description: "cloudideastar Master VPC privateSubnet3 ID"
+    Value: !Ref privateSubnet3 # the vaule of export is here
+    Export:
+      Name: !Sub ${AWS::StackName}-privateSubnet3ID # the name of infra-stack export
+  routeTableForprivateSubnet1: #logicalID
+    Description: "routeTable ID for privateSubnet1"
+    Value: !Ref routeTableForprivateSubnet1 # the vaule of export is here
+    Export:
+      Name: !Sub ${AWS::StackName}-privateSubnet1-routeTableID # the name of infra-stack export
+  routeTableForprivateSubnet2: #logicalID
+    Description: "routeTable ID for privateSubnet2"
+    Value: !Ref routeTableForprivateSubnet2 # the vaule of export is here
+    Export:
+      Name: !Sub ${AWS::StackName}-privateSubnet2-routeTableID # the name of infra-stack export
+  routeTableForprivateSubnet3: #logicalID
+    Description: "routeTable ID for privateSubnet3"
+    Value: !Ref routeTableForprivateSubnet3 # the vaule of export is here
+    Export:
+      Name: !Sub ${AWS::StackName}-privateSubnet3-routeTableID # the name of infra-stack export

@@ -1,0 +1,35 @@
+AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  infraStackName: #ParameterKey
+    Description: "Name of your Infra CFN Stack"
+    Type: String
+    Default: "infra-stack"
+Resources:
+  customSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "cloudideastar-master Custom Security Group"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: "0.0.0.0/0"
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: "0.0.0.0/0"
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: "0.0.0.0/0"
+      VpcId:
+        Fn::ImportValue: !Sub ${infraStackName}-VPCID
+      Tags:
+        - Key: "Name"
+          Value: "cloudideastar Master Security Group"
+Outputs:
+  customSecurityGroupID: #logicalID
+    Description: "cloudideastar Master SecurityGroup ID"
+    Value: !Ref customSecurityGroup # the vaule of export is here
+    Export:
+      Name: !Sub ${AWS::StackName}-SecurityGroupID # the name of infra-stack export

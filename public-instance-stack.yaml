@@ -1,0 +1,29 @@
+AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  securityGroupStackName: #ParameterKey
+    Description: "Name of your Security Group CFN Stack"
+    Type: String
+    Default: "security-stack"
+  infraStackName: #ParameterKey
+    Description: "Name of your Infra CFN Stack"
+    Type: String
+    Default: "infra-stack"
+Resources:
+  publicInstance1:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-0d058fe428540cd89 #ubuntu 20.04 LTS
+      InstanceType: t2.micro
+      SubnetId:
+        Fn::ImportValue: !Sub ${infraStackName}-publicSubnet1ID
+      KeyName: cloudideastar-master
+      Tags:
+        - Key: "Name"
+          Value: "public-instance-1"
+      SecurityGroupIds:
+        - !ImportValue
+          Fn::Sub: ${securityGroupStackName}-SecurityGroupID
+Outputs:
+  publicInstanceDNS:
+    Description: DNS Name of Public Instance
+    Value: !GetAtt publicInstance1.PublicDnsName

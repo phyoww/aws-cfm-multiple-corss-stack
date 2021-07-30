@@ -1,0 +1,75 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  cloudideastarMasterVpc1:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: "192.168.0.0/16"
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+      InstanceTenancy: "default"
+      Tags:
+        - Key: "Name"
+          Value: "cloudideastar-master-vpc1"
+  publicSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: "ap-southeast-1a"
+      CidrBlock: "192.168.1.0/24"
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: "Name"
+          Value: "mastervpc1-public-subnet1"
+      VpcId: !Ref cloudideastarMasterVpc1
+  publicSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: "ap-southeast-1b"
+      CidrBlock: "192.168.2.0/24"
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: "Name"
+          Value: "mastervpc1-public-subnet2"
+      VpcId: !Ref cloudideastarMasterVpc1
+  publicSubnet3:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: "ap-southeast-1c"
+      CidrBlock: "192.168.3.0/24"
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: "Name"
+          Value: "mastervpc1-public-subnet3"
+      VpcId: !Ref cloudideastarMasterVpc1
+  routeTableForPublicSubnets:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      Tags:
+        - Key: "Name"
+          Value: "route-table-publicSubnets"
+      VpcId: !Ref cloudideastarMasterVpc1
+Outputs:
+  cloudideastarMasterVpc1ID: #logicalID
+    Description: "cloudideastar Master VPC1 ID"
+    Value: !Ref cloudideastarMasterVpc1 # the vaule of export is here
+    Export:
+      Name: !Sub ${AWS::StackName}-VPCID # the name of infra-stack export
+  publicSubnet1ID: #logicalID
+    Description: "cloudideastar Master VPC publicSubnet1 ID"
+    Value: !Ref publicSubnet1 # the vaule of export is here
+    Export:
+      Name: !Sub ${AWS::StackName}-publicSubnet1ID # the name of infra-stack export
+  publicSubnet2ID: #logicalID
+    Description: "cloudideastar Master VPC publicSubnet2 ID"
+    Value: !Ref publicSubnet2 # the vaule of export is here
+    Export:
+      Name: !Sub ${AWS::StackName}-publicSubnet2ID # the name of infra-stack export
+  publicSubnet3ID: #logicalID
+    Description: "cloudideastar Master VPC publicSubnet3 ID"
+    Value: !Ref publicSubnet3 # the vaule of export is here
+    Export:
+      Name: !Sub ${AWS::StackName}-publicSubnet3ID # the name of infra-stack export
+  routeTableForPublicSubnets: #logicalID
+    Description: "cloudideastar routeTable ID"
+    Value: !Ref routeTableForPublicSubnets # the vaule of export is here
+    Export:
+      Name: !Sub ${AWS::StackName}-routeTableID # the name of infra-stack export

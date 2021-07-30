@@ -1,0 +1,48 @@
+AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  infraStackName:
+    Description: "Name of your Infra CFN Stack"
+    Type: String
+Resources:
+  publicSubnet1RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId:
+        Fn::ImportValue: !Sub ${infraStackName}-publicSubnet1ID
+      RouteTableId:
+        Fn::ImportValue: !Sub ${infraStackName}-routeTableID
+  # Associate publicSubnet1 to RouteTable
+  publicSubnet2RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId:
+        Fn::ImportValue: !Sub ${infraStackName}-publicSubnet2ID
+      RouteTableId:
+        Fn::ImportValue: !Sub ${infraStackName}-routeTableID
+  # Associate publicSubnet1 to RouteTable
+  publicSubnet3RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId:
+        Fn::ImportValue: !Sub ${infraStackName}-publicSubnet3ID
+      RouteTableId:
+        Fn::ImportValue: !Sub ${infraStackName}-routeTableID
+  cloudideastarMasterIGW:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: "Name"
+          Value: "cloudideastar master igw"
+  attachVPCAndIGW:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      InternetGatewayId: !Ref cloudideastarMasterIGW
+      VpcId:
+        Fn::ImportValue: !Sub ${infraStackName}-VPCID
+  defaultRouteToIGW:
+    Type: AWS::EC2::Route
+    Properties:
+      DestinationCidrBlock: "0.0.0.0/0"
+      GatewayId: !Ref cloudideastarMasterIGW
+      RouteTableId:
+        Fn::ImportValue: !Sub ${infraStackName}-routeTableID
